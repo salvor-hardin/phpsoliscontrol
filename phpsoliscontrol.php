@@ -162,8 +162,12 @@ function soliscurl($keyAccount,$keyPass,$keyID,$keySecret,$endPoint,$body,$extra
 	  CURLOPT_HTTPHEADER => $headers
 	));
 	
-	$response = json_decode(curl_exec($curl),TRUE);
-	
+	//$response = json_decode(curl_exec($curl),TRUE);
+
+	//Fixes Solis returning malformed jsons as per https://github.com/stevegal/solis_control/issues/21
+	$response = json_decode(str_replace(",
+  },","},",curl_exec($curl)),TRUE);
+
 	curl_close($curl);
 
 	if (
